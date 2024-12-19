@@ -1,97 +1,101 @@
 const getState = ({ getStore, getActions, setStore }) => {
-	return {
-		store: {
-			people: [],
-			planets: [],
-			vehicles: [],
-			films: [],
-			species: [],
-			starships: []
-		},
-		actions: {
-			getPeople: async () => {
-				try {
-					const response = await fetch ("https://www.swapi.tech/api/people");
-					if (!response.ok) throw new Error ("Error al obtener personajes");
+    return {
+        store: {
+            people: [],
+            planets: [],
+            vehicles: [],
+            films: [],
+            species: [],
+            starships: [],
+            favorites: []
+        },
+        actions: {
+            getPeople: async () => {
+                try {
+                    const response = await fetch("https://www.swapi.tech/api/people");
+                    if (!response.ok) throw new Error("Error al obtener personajes");
 
-					const data = await response.json();
+                    const data = await response.json();
+                    setStore({ people: data.results });
+                } catch (error) {
+                    console.error("Error al obtener personajes", error);
+                }
+            },
 
-					setStore({people: data.results});
-				} catch (error) {
-					console.error("Error al obtener personajes", error);
-				}
-			},
+            getFilms: async () => {
+                try {
+                    const response = await fetch("https://www.swapi.tech/api/films");
+                    if (!response.ok) throw new Error("Error al obtener películas");
 
-			getFilms: async () => {
-				try {
-					const response = await fetch ("https://www.swapi.tech/api/films");
-					if (!response.ok) throw new Error ("Error al obtener peliculas");
+                    const data = await response.json();
+                    setStore({ films: data.results });
+                } catch (error) {
+                    console.error("Error al obtener películas", error);
+                }
+            },
 
-					const data = await response.json();
+            getPlanets: async () => {
+                try {
+                    const response = await fetch("https://www.swapi.tech/api/planets");
+                    if (!response.ok) throw new Error("Error al obtener planetas");
 
-					setStore({films: data.results});
-				} catch (error) {
-					console.error("Error al obtener peliculas", error);
-				}
-			},
+                    const data = await response.json();
+                    setStore({ planets: data.results });
+                } catch (error) {
+                    console.error("Error al obtener planetas", error);
+                }
+            },
 
-			getPlanets: async () => {
-				try {
-					const response = await fetch ("https://www.swapi.tech/api/planets");
-					if (!response.ok) throw new Error ("Error al obtener planetas");
+            getVehicles: async () => {
+                try {
+                    const response = await fetch("https://www.swapi.tech/api/vehicles");
+                    if (!response.ok) throw new Error("Error al obtener vehículos");
 
-					const data = await response.json();
+                    const data = await response.json(); // Se agregó await
+                    setStore({ vehicles: data.results });
+                } catch (error) {
+                    console.error("Error al obtener vehículos", error);
+                }
+            },
 
-					setStore({planets: data.results});
-				} catch (error) {
-					console.error("Error al obtener planetas", error);
-				}
-			},
+            getSpecies: async () => {
+                try {
+                    const response = await fetch("https://www.swapi.tech/api/species");
+                    if (!response.ok) throw new Error("Error al obtener especies");
 
-			getVehicles: async () => {
-				try{
-					const response = await fetch ("https://www.swapi.tech/api/vehicles");
-					if (!response.ok) throw new Error ("Error al obtener vehiculos");
+                    const data = await response.json(); // Se agregó await
+                    setStore({ species: data.results });
+                } catch (error) {
+                    console.error("Error al obtener especies", error);
+                }
+            },
 
-					const data = response.json();
+            addFavorite: (item) => {
+                const store = getStore();
+                if (!store.favorites.some((fav) => fav.name === item.name)) {
+                    setStore({ favorites: [...store.favorites, item] });
+                }
+            },
+        
+            removeFavorite: (name) => {
+                const store = getStore();
+                const updatedFavorites = store.favorites.filter((fav) => fav.name !== name);
+                setStore({ favorites: updatedFavorites });
+            },
 
-					setStore({vehicles: data.results});
-				} catch (error){
-					console.error("Error al obtener vehiculos", error);
-				}
-			},
+            getStarships: async () => {
+                try {
+                    const response = await fetch("https://www.swapi.tech/api/starships");
+                    if (!response.ok) throw new Error("Error al obtener naves");
 
-			getSpecies: async () => {
-				try{
-					const response = await fetch ("https://www.swapi.tech/api/species");
-					if (!response.ok) throw new Error ("Error al obtener especies");
-
-					const data = response.json();
-
-					setStore({species: data.results});
-				} catch (error) {
-					console.error("Error al obtener especies", error);
-				}
-			},
-
-			getStarships: async () => {
-				try{
-					const response = await fetch ("https://www.swapi.tech/api/starships");
-				if (!response.ok) throw new Error("Error al obtener naves");
-
-				const data = response.json();
-
-				setStore({starships: data.results});
-				} catch (error){
-					console.error("Error al obtener naves", error);
-				}
-
-
-			}
-
-		}
-
-	};
+                    const data = await response.json(); // Se agregó await
+                    setStore({ starships: data.results });
+                } catch (error) {
+                    console.error("Error al obtener naves", error);
+                }
+            }
+        }
+    };
 };
 
 export default getState;
